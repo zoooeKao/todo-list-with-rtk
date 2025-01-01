@@ -4,8 +4,8 @@ module.exports = function (app) {
   app.use(
     // '', baeURL
     createProxyMiddleware({
-      target: 'http://localhost:4000', // 你的後端伺服器地址
-      // target: 'http://dummy.zeabur.app',
+      // target: 'http://localhost:4000', // 你的後端伺服器地址
+      target: 'https://todo-list-with-rtk.zeabur.app/',
       changeOrigin: true, // 確保跨域請求的來源正確
       // pathRewrite: {
       //   '^/api': '',
