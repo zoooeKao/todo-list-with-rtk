@@ -29,9 +29,9 @@ export const Progress = () => {
   const finishedRatio = Math.round((finishedTodos / totalTodos) * 100);
 
   return (
-    <div className='flex items-center pt-4 border-t-2 border-solid border-t-sky-600 '>
-      <span className='w-1/12'>{Object.is(NaN, finishedRatio) ? 0 : finishedRatio}%</span>
-      <div className='w-11/12 '>
+    <div className='flex items-center pt-4 border-t-2 border-solid border-t-sky-600'>
+      <div className='w-2/12 md:w-1/12'>{Object.is(NaN, finishedRatio) ? 0 : finishedRatio}%</div>
+      <div className='w-10/12 md:w-11/12'>
         <BorderLinearProgress
           variant='determinate'
           value={Object.is(NaN, finishedRatio) ? 0 : finishedRatio}

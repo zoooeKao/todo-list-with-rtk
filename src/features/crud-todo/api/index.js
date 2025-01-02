@@ -18,7 +18,7 @@ export const fetchLogin = () => {
     });
 };
 
-/** @typedef {import('../../../env').Todo} Todo */
+/** @typedef {{id: number; todo: string; completed: boolean}} Todo */
 
 /** @returns {Promise<{todos:Todo[];total:number}>} */
 export const fetchTodoList = () => {
@@ -44,6 +44,12 @@ export function fetchUpdateTodo({id, todo, completed}) {
     return res.ok ? res.json() : Promise.reject(`Put id:${id} checked/todo API failed`);
   });
 }
+
+/** @param {Object} param0
+ * @param {string} param0.todo
+ * @param {boolean} param0.completed
+ * @returns {Promise<Todo>}
+ */
 export function fetchAddTodo({todo, completed}) {
   return fetch('/api/todo', {
     method: 'POST',
@@ -60,6 +66,10 @@ export function fetchAddTodo({todo, completed}) {
   });
 }
 
+/** @param {Object} param0
+ * @param {number} param0.id
+ * @returns {Promise<number>}
+ */
 export function fetchDeleteTodo(id) {
   return fetch(`/api/todo/${id}`, {
     method: 'DELETE',

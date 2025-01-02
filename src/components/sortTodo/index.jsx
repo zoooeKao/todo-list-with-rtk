@@ -11,7 +11,7 @@ export const SortTodo = ({sort, change}) => {
           <Switch
             defaultChecked
             checked={sort}
-            onChange={(event) => change(event.target.checked)}
+            onChange={(e) => change(e.target.checked)}
             inputProps={{'aria-label': 'controlled'}}
           />
         }
