@@ -13,7 +13,7 @@ export const TodoWrapper = () => {
   const [newTodo, setNewTodo] = useState('');
   const [sort, setSort] = useState(false);
   // const todos = /** @type {OriTodo[]} */ (sort ? [...originTodos].sort((a, b) => a.completed - b.completed) : originTodos);
-  const [todos, setTodos] = /** @type {OriTodo[]} */ (sort ? [...originTodos].sort((a, b) => a.completed - b.completed) : originTodos);
+  const todos = /** @type {OriTodo[]} */ (sort ? [...originTodos].sort((a, b) => a.completed - b.completed) : originTodos);
   const listEndRef = useRef(null);
 
   useEffect(() => {
