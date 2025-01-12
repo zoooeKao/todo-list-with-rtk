@@ -9,10 +9,9 @@ import {AddTodo} from '../addTodo';
 export const TodoWrapper = () => {
   const dispatch = useDispatch();
   const originTodos = /** @type {OriTodo[]} */ (useSelector((state) => state.todos.items));
-  console.log('originTodos', originTodos);
   const [newTodo, setNewTodo] = useState('');
   const [sort, setSort] = useState(false);
-  // const todos = /** @type {OriTodo[]} */ (sort ? [...originTodos].sort((a, b) => a.completed - b.completed) : originTodos);
+  const [editingTodo, setEditingTodo] = useState({editingId: null, tempEditText: ''});
   const todos = /** @type {OriTodo[]} */ (sort ? [...originTodos].sort((a, b) => a.completed - b.completed) : originTodos);
   const listEndRef = useRef(null);
 
@@ -42,9 +41,36 @@ export const TodoWrapper = () => {
    * @param {string} param0.todo
    */
   const handleEditTodo = ({id, todo}) => {
-    const findTodo = originTodos.find((oriTodo) => oriTodo.id === id);
-    if (findTodo) {
-      dispatch(updateTodo({...findTodo, todo: todo}));
+    setEditingTodo({editingId: id, tempEditText: todo});
+  };
+
+  /** @param {Object} param0
+   * @param {React.KeyboardEvent} e
+   * @param {number} id
+   */
+  const handleKeyDown = async (e, id) => {
+    if (e.key === 'Enter') {
+      const findTodo = originTodos.find((oriTodo) => oriTodo.id === id);
+      if (findTodo) {
+        await dispatch(updateTodo({...findTodo, todo: editingTodo.tempEditText}));
+        setEditingTodo({editingId: null, tempEditText: ''});
+      }
+    } else if (e.key === 'Escape') {
+      setEditingTodo({editingId: null, tempEditText: ''});
+    }
+  };
+
+  // 失去焦點時也保存更改
+  /** @param {Object} param0
+   * @param {number} id
+   */
+  const handleBlur = async (id) => {
+    if (editingTodo.editingId === id) {
+      const findTodo = originTodos.find((oriTodo) => oriTodo.id === id);
+      if (findTodo) {
+        await dispatch(updateTodo({...findTodo, todo: editingTodo.tempEditText}));
+        setEditingTodo({editingId: null, tempEditText: ''});
+      }
     }
   };
 
@@ -54,8 +80,8 @@ export const TodoWrapper = () => {
   };
 
   const handleAddTodo = () => {
-    if (newTodo.trim()) {
-      dispatch(addTodo({todo: newTodo, completed: false}));
+    if (newTodo) {
+      dispatch(addTodo({todo: newTodo.trim(), completed: false}));
       setNewTodo('');
     }
   };
@@ -70,14 +96,17 @@ export const TodoWrapper = () => {
                 <div className='relative flex items-center px-3 py-2 bg-white border-l-4 border-solid border-t-sky-600 '>
                   <input
                     type='checkbox'
-                    checked={completed ? true : false}
+                    checked={completed}
                     onChange={(e) => handleToggleComplete({id: id, completed: e.target.checked})}
                     className='accent-blue-primary'
                   />
                   <input
                     type='text'
-                    value={todo}
-                    onChange={(e) => handleEditTodo({id: id, todo: e.target.value})}
+                    value={editingTodo.editingId === id ? editingTodo.tempEditText : todo}
+                    onClick={() => handleEditTodo({id, todo})} // 記憶要更新的是哪一筆todo
+                    onChange={(e) => (editingTodo.editingId === id ? setEditingTodo({editingId: id, tempEditText: e.target.value}) : handleEditTodo({id, todo: e.target.value}))}
+                    onKeyDown={(e) => handleKeyDown(e, id)}
+                    onBlur={() => handleBlur(id)}
                     className={`w-full p-2 outline-none ${completed ? 'line-through' : ''}`}
                   />
                   <button

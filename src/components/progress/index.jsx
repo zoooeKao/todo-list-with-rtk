@@ -1,7 +1,7 @@
 // @ts-check
 import LinearProgress, {linearProgressClasses} from '@mui/material/LinearProgress';
 import {styled} from '@mui/material/styles';
-import * as React from 'react';
+import React, {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 const BorderLinearProgress = styled(LinearProgress)(({theme}) => ({
@@ -24,17 +24,22 @@ const BorderLinearProgress = styled(LinearProgress)(({theme}) => ({
 
 export const Progress = () => {
   const todos = useSelector((state) => state.todos.items);
-  const totalTodos = todos.length;
-  const finishedTodos = todos.filter((todo) => todo.completed === true).length;
-  const finishedRatio = Math.round((finishedTodos / totalTodos) * 100);
+  const totalTodosLength = todos.length;
+  const finishedTodosLength = useMemo(() => {
+    return todos.filter((todo) => todo.completed).length;
+  }, [todos]);
+
+  const finishedRatio = useMemo(() => {
+    return totalTodosLength === 0 ? 0 : Math.round((finishedTodosLength / totalTodosLength) * 100);
+  }, [finishedTodosLength, totalTodosLength]);
 
   return (
     <div className='flex items-center pt-4 border-t-2 border-solid border-t-sky-600'>
-      <div className='w-2/12 md:w-1/12'>{Object.is(NaN, finishedRatio) ? 0 : finishedRatio}%</div>
+      <div className='w-2/12 md:w-1/12'>{finishedRatio}%</div>
       <div className='w-10/12 md:w-11/12'>
         <BorderLinearProgress
           variant='determinate'
-          value={Object.is(NaN, finishedRatio) ? 0 : finishedRatio}
+          value={finishedRatio}
         />
       </div>
     </div>

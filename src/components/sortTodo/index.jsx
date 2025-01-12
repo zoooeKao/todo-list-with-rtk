@@ -3,14 +3,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import React from 'react';
 
-export const SortTodo = ({sort, change}) => {
+export const SortTodo = ({checked, change}) => {
   return (
     <>
       <FormControlLabel
         control={
           <Switch
             defaultChecked
-            checked={sort}
+            checked={checked}
             onChange={(e) => change(e.target.checked)}
             inputProps={{'aria-label': 'controlled'}}
           />
